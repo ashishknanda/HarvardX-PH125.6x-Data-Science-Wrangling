@@ -1470,7 +1470,22 @@ length(tab)
 What is the first table number to have 9 columns where the first column is named "Date(s) conducted"? 
 
 ```{r}
-tab[[5]] %>% html_table(fill = TRUE) %>% names()    # inspect column names
+url <- "https://en.wikipedia.org/w/index.php?title=Opinion_polling_for_the_United_Kingdom_European_Union_membership_referendum&oldid=896735054"
+> webpage <- read_html(url)
+> 
+> # Extract all tables from the webpage
+> tables <- html_nodes(webpage, "table")
+> 
+> # Convert all tables to data frames
+> table_data <- lapply(tables, html_table, fill = TRUE)
+> 
+> for (i in seq_along(table_data)) {
++     table <- table_data[[i]]
++     if (ncol(table) == 9 && colnames(table)[1] == "Date(s) conducted") {
++         print(paste("The first matching table is table number:", i))
++         break
++     }
++ }
 ```
 
 # Section 3 Overview
